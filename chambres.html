@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nos Chambres - Teranga Palace</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Page transition -->
+    <style>
+        body {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+
+        .nav-link.active {
+            color: var(--color-primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <a href="index.html">
+                <!-- <img src="assetes/Terangua Palace.png" alt="Teranga Palace" class="logo-img"> -->
+            </a>
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-link" onclick="navigateTo(event, 'index.html')">Accueil</a>
+            <a href="chambres.html" class="nav-link active" style="color: var(--color-primary);">Chambres</a>
+            <a href="auth.html" id="auth-btn-nav" class="btn btn-primary"
+                onclick="navigateTo(event, 'auth.html')">Connexion / Inscription</a>
+            <a href="#" id="logout-btn-nav" class="btn btn-primary hidden" onclick="handleLogout(event)">Déconnexion</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="page-header">
+            <h1>Nos Chambres & Suites</h1>
+            <p>Découvrez notre sélection de chambres luxueuses pour un séjour inoubliable à Dakar.</p>
+        </section>
+
+        <section class="rooms-container">
+            <div id="rooms-grid" class="rooms-grid">
+                <!-- Les chambres seront injectées ici par JS -->
+                <div class="loader-container">
+                    <div class="spinner"></div>
+                    <p>Chargement des chambres...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo-text">🏨 Teranga Palace</span>
+                <p>Le luxe au cœur de Dakar.<br>Une expérience inoubliable vous attend.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navigation</h4>
+                <a href="index.html">Accueil</a>
+                <a href="chambres.html">Nos Chambres</a>
+                <a href="auth.html">Connexion / Inscription</a>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact</h4>
+                <p>📍 Avenue Léopold Sédar Senghor, Dakar</p>
+                <p>📞 +221 33 800 00 00</p>
+                <p>✉️ contact@terangapalace.sn</p>
+            </div>
+            <div class="footer-socials">
+                <h4>Suivez-nous</h4>
+                <div class="social-icons">
+                    <a href="#" class="social-icon" aria-label="Facebook">f</a>
+                    <a href="#" class="social-icon" aria-label="Instagram">in</a>
+                    <a href="#" class="social-icon" aria-label="Twitter">𝕏</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Teranga Palace. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Bouton scroll to top -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+        aria-label="Retour en haut">↑</button>
+
+    <!-- Bouton temporaire pour injecter des données de test si la table est vide -->
+    <button id="dev-seed-rooms" class="dev-seed-btn hidden" onclick="seedRooms()">Générer des chambres de test</button>
+
+    <!-- Scripts -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chambres.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('loaded');
+        });
+        function navigateTo(e, url) {
+            e.preventDefault();
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.35s ease';
+            setTimeout(() => { window.location.href = url; }, 350);
+        }
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scrollTopBtn');
+            if (btn) btn.classList.toggle('visible', window.scrollY > 300);
+        });
+    </script>
+</body>
+
+</html>
