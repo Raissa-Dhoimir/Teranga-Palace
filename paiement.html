@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement - Teranga Palace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="auth-body">
+    <div class="auth-container" style="max-width: 520px;">
+        <div class="auth-card glassmorphism">
+
+            <div class="auth-header">
+                <h2>💳 Paiement</h2>
+                <p id="facture-subtitle">Chargement de la facture...</p>
+            </div>
+
+            <div id="alert-container" class="alert hidden"></div>
+
+            <!-- Résumé facture -->
+            <div id="facture-summary" class="hidden"
+                style="margin-bottom: 24px; padding: 16px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="opacity: 0.8; font-size: 0.9rem;">N° Facture</span>
+                    <strong id="disp-num-facture">-</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="opacity: 0.8; font-size: 0.9rem;">Chambre</span>
+                    <strong id="disp-chambre">-</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="opacity: 0.8; font-size: 0.9rem;">Séjour</span>
+                    <strong id="disp-sejour">-</strong>
+                </div>
+                <hr style="border-color: rgba(255,255,255,0.2); margin: 12px 0;">
+                <div style="display: flex; justify-content: space-between; font-size: 1.2rem;">
+                    <span>Montant dû</span>
+                    <strong id="disp-montant" style="color: var(--color-secondary);">-</strong>
+                </div>
+            </div>
+
+            <!-- Formulaire de paiement -->
+            <form id="paiement-form" class="auth-form hidden">
+                <div class="form-group">
+                    <label for="mode-paiement">Mode de paiement</label>
+                    <select id="mode-paiement">
+                        <option value="Espèces">💵 Espèces</option>
+                        <option value="Carte">💳 Carte bancaire</option>
+                        <option value="Mobile Money">📱 Mobile Money</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="montant-saisi">Montant à saisir (FCFA)</label>
+                    <input type="number" id="montant-saisi" required placeholder="Ex: 75000" min="0">
+                </div>
+                <button type="submit" id="btn-payer" class="btn btn-primary auth-btn">Simuler le paiement</button>
+            </form>
+
+            <div class="auth-home-link" style="margin-top: 20px;">
+                <a href="dashboard-client.html">← Retour à mon espace</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/paiement.js"></script>
+</body>
+
+</html>
