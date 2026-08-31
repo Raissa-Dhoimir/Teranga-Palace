@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réserver - Teranga Palace</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-body"> <!-- We can reuse the beautiful auth background -->
+    <div class="auth-container" style="max-width: 600px;">
+        <div class="auth-card glassmorphism">
+            <div class="auth-header">
+                <h2>Réserver une chambre</h2>
+                <p>Choisissez vos dates pour voir les disponibilités</p>
+            </div>
+            
+            <div id="alert-container" class="alert hidden"></div>
+
+            <form id="reservation-form" class="auth-form">
+                <div class="form-group" style="display: flex; gap: 15px;">
+                    <div style="flex: 1;">
+                        <label for="date-arrivee">Date d'arrivée</label>
+                        <input type="date" id="date-arrivee" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="date-depart">Date de départ</label>
+                        <input type="date" id="date-depart" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="chambre-select">Choix de la chambre</label>
+                    <select id="chambre-select" required disabled>
+                        <option value="">Sélectionnez d'abord vos dates...</option>
+                    </select>
+                </div>
+                
+                <div id="booking-summary" class="hidden" style="margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                    <h4 style="margin-bottom: 10px; color: var(--color-secondary);">Résumé de la réservation</h4>
+                    <p style="font-size: 0.9rem; margin-bottom: 5px;"><strong>Chambre :</strong> <span id="summary-room">-</span></p>
+                    <p style="font-size: 0.9rem; margin-bottom: 5px;"><strong>Nuits :</strong> <span id="summary-nights">-</span></p>
+                    <p style="font-size: 0.9rem;"><strong>Total estimé :</strong> <span id="summary-total" style="font-weight: 700; color: #fff;">-</span> FCFA</p>
+                </div>
+
+                <button type="submit" id="btn-reserver" class="btn btn-primary auth-btn" disabled>Confirmer la réservation</button>
+                
+                <div class="auth-home-link">
+                    <a href="chambres.html">← Voir toutes les chambres</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/reservation.js"></script>
+</body>
+</html>
