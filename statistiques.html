@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques - Teranga Palace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Chart.js pour les graphiques -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <a href="index.html">
+                <img src="assetes/Terangua Palace.png" alt="Teranga Palace" class="logo-img">
+            </a>
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-link">Accueil</a>
+            <a href="dashboard-admin.html" class="nav-link">Admin</a>
+            <a href="statistiques.html" class="nav-link" style="color: var(--color-primary);">Statistiques</a>
+            <a href="#" class="btn btn-primary" onclick="handleLogout(event)">Déconnexion</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+
+        <div class="dashboard-header">
+            <div>
+                <h1>📊 Statistiques</h1>
+                <p>Rapports et indicateurs de performance</p>
+            </div>
+            <!-- Filtre période -->
+            <div style="display:flex;align-items:center;gap:12px;">
+                <label for="periode-select" style="font-weight:600;">Période :</label>
+                <select id="periode-select" onchange="loadAllStats()" style="padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;">
+                    <option value="mois">Ce mois</option>
+                    <option value="trimestre">Ce trimestre</option>
+                    <option value="annee">Cette année</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="alert-container" class="alert hidden"></div>
+
+        <!-- ===== KPI CARDS ===== -->
+        <div class="stats-kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon">🛏️</div>
+                <div class="kpi-value" id="kpi-taux-occupation">--</div>
+                <div class="kpi-label">Taux d'occupation</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">💰</div>
+                <div class="kpi-value" id="kpi-revenus">--</div>
+                <div class="kpi-label">Revenus (FCFA)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📋</div>
+                <div class="kpi-value" id="kpi-reservations">--</div>
+                <div class="kpi-label">Réservations</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">✅</div>
+                <div class="kpi-value" id="kpi-sejours">--</div>
+                <div class="kpi-label">Séjours complétés</div>
+            </div>
+        </div>
+
+        <!-- ===== GRAPHIQUES ===== -->
+        <div class="stats-charts-grid">
+            <!-- Revenus par mois -->
+            <div class="chart-card">
+                <h3>Revenus par mois</h3>
+                <canvas id="chart-revenus" height="250"></canvas>
+            </div>
+
+            <!-- Réservations par statut -->
+            <div class="chart-card">
+                <h3>Réservations par statut</h3>
+                <canvas id="chart-statut-reservations" height="250"></canvas>
+            </div>
+        </div>
+
+        <!-- Chambres les plus réservées -->
+        <div class="chart-card" style="margin-top: var(--spacing-lg);">
+            <h3>🏆 Chambres les plus réservées</h3>
+            <canvas id="chart-top-chambres" height="120"></canvas>
+        </div>
+
+        <!-- Tableau récapitulatif -->
+        <div class="chart-card" style="margin-top: var(--spacing-lg);">
+            <h3>📄 Factures impayées</h3>
+            <table class="data-table" id="table-impayees">
+                <thead>
+                    <tr>
+                        <th>N° Facture</th>
+                        <th>Client</th>
+                        <th>Montant</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="impayees-list">
+                    <tr><td colspan="5" style="text-align:center;">Chargement...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/statistiques.js"></script>
+
+</body>
+
+</html>
