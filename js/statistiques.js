@@ -7,10 +7,10 @@ let chartTopChambres = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Vérification admin
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) { window.location.href = "auth.html"; return; }
 
-    const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+    const { data: profile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
     if (!profile || profile.role !== 'admin') {
         alert("Accès réservé aux administrateurs.");
         window.location.href = "index.html";
@@ -53,14 +53,14 @@ async function loadAllStats() {
 async function loadKpis(dateDebut) {
     try {
         // 1. Taux d'occupation = chambres occupées / total chambres
-        const { data: chambres } = await supabase.from('chambres').select('statut');
+        const { data: chambres } = await supabaseClient.from('chambres').select('statut');
         const total = chambres.length;
         const occupees = chambres.filter(c => c.statut === 'occupee').length;
         const taux = total > 0 ? Math.round((occupees / total) * 100) : 0;
         document.getElementById('kpi-taux-occupation').textContent = `${taux}%`;
 
         // 2. Revenus (somme des factures payées sur la période)
-        const { data: factures } = await supabase
+        const { data: factures } = await supabaseClient
             .from('factures')
             .select('montant_total')
             .eq('statut', 'payee')
@@ -76,7 +76,7 @@ async function loadKpis(dateDebut) {
         document.getElementById('kpi-reservations').textContent = resa.length;
 
         // 4. Séjours complétés sur la période
-        const { data: sejours } = await supabase
+        const { data: sejours } = await supabaseClient
             .from('sejours')
             .select('id')
             .not('date_depart', 'is', null)
@@ -93,7 +93,7 @@ async function loadKpis(dateDebut) {
 // ============================================================
 async function loadChartRevenus() {
     try {
-        const { data: factures } = await supabase
+        const { data: factures } = await supabaseClient
             .from('factures')
             .select('montant_total, date_facture')
             .eq('statut', 'payee');
@@ -152,7 +152,7 @@ async function loadChartRevenus() {
 // ============================================================
 async function loadChartStatutReservations(dateDebut) {
     try {
-        const { data: resa } = await supabase
+        const { data: resa } = await supabaseClient
             .from('reservations')
             .select('statut')
             .gte('date_reservation', dateDebut);
@@ -189,7 +189,7 @@ async function loadChartStatutReservations(dateDebut) {
 // ============================================================
 async function loadChartTopChambres(dateDebut) {
     try {
-        const { data: resa } = await supabase
+        const { data: resa } = await supabaseClient
             .from('reservations')
             .select(`id_chambre, chambres(numero_chambre, type)`)
             .neq('statut', 'annulee')
@@ -242,7 +242,7 @@ async function loadChartTopChambres(dateDebut) {
 async function loadFacturesImpayees() {
     const tbody = document.getElementById('impayees-list');
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('factures')
             .select(`*, sejours(profiles(nom, prenom))`)
             .eq('statut', 'impayee')
@@ -285,7 +285,7 @@ async function loadFacturesImpayees() {
 async function marquerPayeeStats(factureId) {
     if (!confirm("Marquer cette facture comme payée ?")) return;
     try {
-        const { error } = await supabase.from('factures').update({ statut: 'payee' }).eq('id', factureId);
+        const { error } = await supabaseClient.from('factures').update({ statut: 'payee' }).eq('id', factureId);
         if (error) throw error;
         loadFacturesImpayees();
         loadAllStats();

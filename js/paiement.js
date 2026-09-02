@@ -5,7 +5,7 @@ let factureData = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Vérifier la session
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) {
         window.location.href = "auth.html";
         return;
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadFacture(factureId) {
     try {
         // Charger la facture + le séjour + la chambre associés
-        const { data: facture, error } = await supabase
+        const { data: facture, error } = await supabaseClient
             .from('factures')
             .select(`
                 *,
@@ -134,7 +134,7 @@ async function enregistrerPaiement(montant, modePaiement, statut) {
     const btn = document.getElementById('btn-payer');
     try {
         // 1. Créer l'enregistrement du paiement
-        const { error: errPaiement } = await supabase
+        const { error: errPaiement } = await supabaseClient
             .from('paiements')
             .insert([{
                 id_facture: factureData.id,
@@ -146,7 +146,7 @@ async function enregistrerPaiement(montant, modePaiement, statut) {
         if (errPaiement) throw errPaiement;
 
         // 2. Mettre à jour le statut de la facture
-        const { error: errFacture } = await supabase
+        const { error: errFacture } = await supabaseClient
             .from('factures')
             .update({ statut: 'payee' })
             .eq('id', factureData.id);

@@ -3,13 +3,13 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Vérifier session et rôle admin
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) {
         window.location.href = "auth.html";
         return;
     }
 
-    const { data: profile } = await supabase
+    const { data: profile } = await supabaseClient
         .from('profiles')
         .select('role')
         .eq('id', session.user.id)
@@ -67,7 +67,7 @@ function closeModal(id) {
 async function loadClients() {
     const tbody = document.getElementById('clients-list');
     try {
-        const { data: clients, error } = await supabase
+        const { data: clients, error } = await supabaseClient
             .from('profiles')
             .select('*')
             .order('nom', { ascending: true });
@@ -125,7 +125,7 @@ async function saveClient() {
     try {
         if (id) {
             // Mise à jour
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('profiles')
                 .update({ nom, prenom, telephone, adresse, role })
                 .eq('id', id);
@@ -151,7 +151,7 @@ async function saveClient() {
 async function loadChambresAdmin() {
     const tbody = document.getElementById('chambres-list');
     try {
-        const { data: chambres, error } = await supabase
+        const { data: chambres, error } = await supabaseClient
             .from('chambres')
             .select('*')
             .order('numero_chambre', { ascending: true });
@@ -219,11 +219,11 @@ async function saveChambre() {
 
     try {
         if (id) {
-            const { error } = await supabase.from('chambres').update(payload).eq('id', id);
+            const { error } = await supabaseClient.from('chambres').update(payload).eq('id', id);
             if (error) throw error;
             showAlert("Chambre mise à jour.", "success");
         } else {
-            const { error } = await supabase.from('chambres').insert([payload]);
+            const { error } = await supabaseClient.from('chambres').insert([payload]);
             if (error) throw error;
             showAlert("Chambre ajoutée avec succès.", "success");
         }
@@ -244,7 +244,7 @@ async function toggleHorsService(id, statutActuel) {
     if (!confirm(message)) return;
 
     try {
-        const { error } = await supabase.from('chambres').update({ statut: nouveauStatut }).eq('id', id);
+        const { error } = await supabaseClient.from('chambres').update({ statut: nouveauStatut }).eq('id', id);
         if (error) throw error;
         showAlert(`Chambre passée à « ${nouveauStatut.replace('_', ' ')} ».`, "success");
         loadChambresAdmin();
@@ -272,7 +272,7 @@ function showAlert(message, type = 'error') {
 async function loadReservationsAdmin() {
     const tbody = document.getElementById('reservations-admin-list');
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('reservations')
             .select(`*, profiles(nom, prenom, email), chambres(numero_chambre, type)`)
             .order('date_arrivee', { ascending: false });
@@ -314,7 +314,7 @@ async function loadReservationsAdmin() {
 async function adminCancelReservation(id) {
     if (!confirm("Annuler cette réservation ?")) return;
     try {
-        const { error } = await supabase.from('reservations').update({ statut: 'annulee' }).eq('id', id);
+        const { error } = await supabaseClient.from('reservations').update({ statut: 'annulee' }).eq('id', id);
         if (error) throw error;
         showAlert("Réservation annulée.", "success");
         loadReservationsAdmin();
@@ -329,7 +329,7 @@ async function adminCancelReservation(id) {
 async function loadSejoursAdmin() {
     const tbody = document.getElementById('sejours-admin-list');
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('sejours')
             .select(`*, profiles(nom, prenom), chambres(numero_chambre, type)`)
             .order('date_arrivee', { ascending: false });
@@ -377,14 +377,14 @@ async function openModal(id) {
         select.innerHTML = '<option value="">Chargement...</option>';
         try {
             // Réservations confirmées
-            const { data: resa, error: errResa } = await supabase
+            const { data: resa, error: errResa } = await supabaseClient
                 .from('reservations')
                 .select(`*, profiles(nom, prenom), chambres(numero_chambre, type)`)
                 .eq('statut', 'confirmee');
             if (errResa) throw errResa;
 
             // Séjours existants (pour exclure les réservations déjà en séjour)
-            const { data: sejours } = await supabase.from('sejours').select('id_reservation');
+            const { data: sejours } = await supabaseClient.from('sejours').select('id_reservation');
             const existingResaIds = (sejours || []).map(s => s.id_reservation);
 
             const disponibles = resa.filter(r => !existingResaIds.includes(r.id));
@@ -416,7 +416,7 @@ async function doCheckIn() {
     const resa = JSON.parse(select.value);
     try {
         // 1. Créer le séjour
-        const { error: errSejour } = await supabase.from('sejours').insert([{
+        const { error: errSejour } = await supabaseClient.from('sejours').insert([{
             id_reservation: resa.id,
             id_client: resa.id_client,
             id_chambre: resa.id_chambre,
@@ -425,7 +425,7 @@ async function doCheckIn() {
         if (errSejour) throw errSejour;
 
         // 2. Mettre la chambre à occupee
-        const { error: errChambre } = await supabase.from('chambres').update({ statut: 'occupee' }).eq('id', resa.id_chambre);
+        const { error: errChambre } = await supabaseClient.from('chambres').update({ statut: 'occupee' }).eq('id', resa.id_chambre);
         if (errChambre) throw errChambre;
 
         showAlert("Check-in effectué avec succès ! La chambre est maintenant occupée.", "success");
@@ -441,7 +441,7 @@ async function doCheckOut(sejourId, chambreId) {
     if (!confirm("Confirmer le check-out ? Le montant sera calculé automatiquement.")) return;
     try {
         // 1. Charger le séjour pour calculer le montant
-        const { data: sejour, error: errLoad } = await supabase
+        const { data: sejour, error: errLoad } = await supabaseClient
             .from('sejours')
             .select(`*, chambres(prix_par_nuit)`)
             .eq('id', sejourId)
@@ -455,19 +455,20 @@ async function doCheckOut(sejourId, chambreId) {
         const montantTotal = nuits * parseFloat(sejour.chambres.prix_par_nuit);
 
         // 2. Mettre à jour le séjour
-        const { error: errSejour } = await supabase
+        const { error: errSejour } = await supabaseClient
             .from('sejours')
             .update({ date_depart: dateDepart, montant_total: montantTotal })
             .eq('id', sejourId);
         if (errSejour) throw errSejour;
 
         // 3. Remettre la chambre disponible
-        const { error: errChambre } = await supabase.from('chambres').update({ statut: 'disponible' }).eq('id', chambreId);
+        const { error: errChambre } = await supabaseClient.from('chambres').update({ statut: 'disponible' }).eq('id', chambreId);
         if (errChambre) throw errChambre;
 
         // 4. Créer automatiquement la facture
         const numeroFacture = `FAC-${Date.now()}`;
-        const { error: errFacture } = await supabase.from('factures').insert([{
+        const { error: errFacture } = await supabaseClient.from('factures').insert([{
+
             numero_facture: numeroFacture,
             id_sejour: sejourId,
             montant_total: montantTotal,
@@ -490,7 +491,7 @@ async function doCheckOut(sejourId, chambreId) {
 async function loadPaiementsAdmin() {
     const tbody = document.getElementById('paiements-admin-list');
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('factures')
             .select(`*, sejours(id_client, profiles(nom, prenom)), paiements(*)`)
             .order('date_facture', { ascending: false });
@@ -538,7 +539,7 @@ async function loadPaiementsAdmin() {
 async function marquerPayee(factureId) {
     if (!confirm("Marquer manuellement cette facture comme payée ?")) return;
     try {
-        const { error } = await supabase.from('factures').update({ statut: 'payee' }).eq('id', factureId);
+        const { error } = await supabaseClient.from('factures').update({ statut: 'payee' }).eq('id', factureId);
         if (error) throw error;
         showAlert("Facture marquée comme payée.", "success");
         loadPaiementsAdmin();

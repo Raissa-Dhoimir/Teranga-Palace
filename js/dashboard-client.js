@@ -2,13 +2,13 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Vérifier session et rôle
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) {
         window.location.href = "auth.html";
         return;
     }
 
-    const { data: profile, error } = await supabase
+    const { data: profile, error } = await supabaseClient
         .from('profiles')
         .select('*')
         .eq('id', session.user.id)
@@ -44,7 +44,7 @@ function switchTab(tabId, event) {
 async function loadReservations() {
     const tbody = document.getElementById('reservations-list');
     try {
-        const { data: reservations, error } = await supabase
+        const { data: reservations, error } = await supabaseClient
             .from('reservations')
             .select(`
                 *,
@@ -96,7 +96,7 @@ async function cancelReservation(id) {
     if (!confirm("Voulez-vous vraiment annuler cette réservation ?")) return;
 
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('reservations')
             .update({ statut: 'annulee' })
             .eq('id', id);
@@ -114,7 +114,7 @@ async function cancelReservation(id) {
 async function loadSejours() {
     const tbody = document.getElementById('sejours-list');
     try {
-        const { data: sejours, error } = await supabase
+        const { data: sejours, error } = await supabaseClient
             .from('sejours')
             .select(`
                 *,
@@ -154,7 +154,7 @@ async function loadSejours() {
 async function loadFactures() {
     const tbody = document.getElementById('factures-list');
     try {
-        const { data: factures, error } = await supabase
+        const { data: factures, error } = await supabaseClient
             .from('factures')
             .select('*')
             .order('date_facture', { ascending: false });

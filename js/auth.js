@@ -89,48 +89,33 @@ async function handleRegister(e) {
     btn.disabled = true;
 
     try {
-        // 1. Inscription via Supabase Auth
+        // Inscription via Supabase Auth — le trigger créera automatiquement le profil
         const { data: authData, error: authError } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
+            options: {
+                data: {
+                    role: role,
+                    nom: nom,
+                    prenom: prenom
+                }
+            }
         });
 
         if (authError) throw authError;
 
-        const user = authData.user;
+        showAlert("Compte créé avec succès ! Vous pouvez maintenant vous connecter.", "success");
 
-        if (user) {
-            // 2. Créer le profil dans la table 'profiles'
-            const { error: profileError } = await supabase
-                .from('profiles')
-                .insert([
-                    {
-                        id: user.id,
-                        email: email,
-                        role: role,
-                        nom: nom,
-                        prenom: prenom
-                    }
-                ]);
-
-            if (profileError) {
-                console.error("Erreur lors de la création du profil :", profileError);
-                throw profileError;
-            }
-
-            showAlert("Compte créé avec succès ! Vous pouvez maintenant vous connecter.", "success");
-
-            // Revenir au formulaire de login
-            setTimeout(() => {
-                toggleAuthMode(new Event('click'));
-                document.getElementById('login-email').value = email;
-                document.getElementById('login-password').value = password; // Optionnel : remplir le mot de passe pour faciliter la vie
-                btn.textContent = originalText;
-                btn.disabled = false;
-                const alertBox = document.getElementById('alert-container');
-                if (alertBox) alertBox.classList.add('hidden');
-            }, 2000);
-        }
+        // Revenir au formulaire de login
+        setTimeout(() => {
+            toggleAuthMode(new Event('click'));
+            document.getElementById('login-email').value = email;
+            document.getElementById('login-password').value = password;
+            btn.textContent = originalText;
+            btn.disabled = false;
+            const alertBox = document.getElementById('alert-container');
+            if (alertBox) alertBox.classList.add('hidden');
+        }, 2000);
 
     } catch (error) {
         showAlert(error.message || "Erreur lors de l'inscription.");
