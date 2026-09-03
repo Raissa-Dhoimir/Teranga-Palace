@@ -35,7 +35,8 @@ async function fetchChambres() {
         const { data: chambres, error } = await supabaseClient
             .from('chambres')
             .select('*')
-            .order('prix_par_nuit', { ascending: true });
+            .order('prix_par_nuit', { ascending: true })
+            .order('numero_chambre', { ascending: true });
 
         if (error) throw error;
 

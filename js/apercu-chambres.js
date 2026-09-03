@@ -29,10 +29,11 @@ async function fetchApercuChambres() {
 
     try {
         const { data: chambres, error } = await supabaseClient
-            .from('chambres')
-            .select('*')
-            .order('prix_par_nuit', { ascending: true })
-            .limit(4); // seulement 4 chambres en aperçu
+             .from('chambres')
+             .select('*')
+             .order('prix_par_nuit', { ascending: true })
+             .order('numero_chambre', { ascending: true })
+             .limit(6); // seulement 6 chambres en aperçu
 
         if (error) throw error;
 

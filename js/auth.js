@@ -82,6 +82,7 @@ async function handleRegister(e) {
     const email = document.getElementById('reg-email').value;
     const password = document.getElementById('reg-password').value;
     const role = document.getElementById('reg-role').value;
+    const adminCode = document.getElementById('reg-admin-code') ? document.getElementById('reg-admin-code').value : '';
     const btn = e.target.querySelector('button');
     const originalText = btn.textContent;
 
@@ -94,10 +95,11 @@ async function handleRegister(e) {
             email: email,
             password: password,
             options: {
-                data: {
-                    role: role,
-                    nom: nom,
-                    prenom: prenom
+               data: {
+                   role: role,
+                   nom: nom,
+                   prenom: prenom,
+                   admin_code: adminCode
                 }
             }
         });

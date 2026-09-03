@@ -77,10 +77,15 @@
                 </div>
                 <div class="form-group">
                     <label for="reg-role">Rôle (Démo)</label>
-                    <select id="reg-role">
-                        <option value="client">Client</option>
-                        <option value="admin">Administrateur</option>
+                    <select id="reg-role" onchange="toggleAdminCode()">
+                    <option value="client">Client</option>
+                    <option value="admin">Administrateur</option>
                     </select>
+
+                   <div id="admin-code-field" class="hidden">
+                      <label for="reg-admin-code">Code Administrateur</label>
+                      <input type="password" id="reg-admin-code" placeholder="Code réservé aux admins">
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary auth-btn">Créer un compte</button>
                 <p class="auth-toggle">Déjà un compte ? <a href="#" onclick="toggleAuthMode(event)">Se connecter</a></p>
@@ -104,6 +109,16 @@
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.35s ease';
             setTimeout(() => { window.location.href = url; }, 350);
+        }
+
+        function toggleAdminCode() {
+        const role = document.getElementById('reg-role').value;
+        const adminField = document.getElementById('admin-code-field');
+        if (role === 'admin') {
+            adminField.classList.remove('hidden');
+        } else {
+            adminField.classList.add('hidden');
+        }
         }
     </script>
 </body>
