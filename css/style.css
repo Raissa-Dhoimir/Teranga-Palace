@@ -3,25 +3,20 @@
    ========================================= */
 :root {
     /* Couleurs principales */
-    --color-primary: #FF734C;
-    /* Orange corail (Boutons, actions) */
-    --color-secondary: #FFCD4C;
-    /* Jaune doré (Mise en valeur) */
-    --color-accent: #FF4C7E;
-    /* Rose fuchsia (Notifications) */
-    --color-error: #E4453B;
-    /* Rouge classique (Erreurs) */
+    --color-primary: #93441A;
+    /* Terracotta foncé (Boutons, actions, CTA) */
+    --color-secondary: #DAAB3A;
+    /* Or chaleureux (Mise en valeur, accents) */
+    --color-accent: #B67332;
+    /* Bronze doré (Hover, badges) */
+    --color-error: #C0392B;
+    /* Rouge profond (Erreurs) */
 
-    --color-brand-navy: #1B3A6B;
-    --color-brand-gold: #C9A15C;
-    --color-brand-navy: #1B3A6B;
-    --color-brand-gold: #C9A15C;
-    --color-brand-cream: #EFE3CE;
     /* Fonds et textes */
-    --color-bg: #FAFAFA;
-    /* Fond clair neutre */
-    --color-text: #2B2B2B;
-    /* Texte foncé */
+    --color-bg: #FAF6F0;
+    /* Fond crème / blanc cassé */
+    --color-text: #2B1B12;
+    /* Brun très foncé */
     --color-surface: #FFFFFF;
     /* Fond des cartes/sections */
 
@@ -75,8 +70,8 @@ a {
 }
 
 .btn-primary:hover {
-    background-color: #e6623d;
-    /* Version légèrement plus foncée */
+    background-color: #B67332;
+    /* Hover bronze doré */
     transform: translateY(-2px);
 }
 
@@ -88,19 +83,70 @@ a {
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-md) var(--spacing-lg);
-    background-color: var(--color-brand-cream);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-bg);
+    box-shadow: 0 2px 12px rgba(43, 27, 18, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: box-shadow 0.3s ease;
+}
+
+.header.scrolled {
+    box-shadow: 0 4px 20px rgba(43, 27, 18, 0.15);
 }
 
 .logo {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .logo-img {
     height: 60px;
-    /* Ajustez la taille si besoin */
     width: auto;
+    transition: height 0.3s ease;
+}
+
+/* Bouton hamburger (caché sur desktop) */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius);
+    transition: background 0.2s;
+}
+
+.nav-toggle:hover {
+    background: rgba(147, 68, 26, 0.08);
+}
+
+.nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--color-text);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform-origin: center;
+}
+
+/* Animation hamburger → croix */
+.nav-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.nav-toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 .nav {
@@ -114,7 +160,8 @@ a {
     transition: color 0.2s;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.nav-link.active {
     color: var(--color-primary);
 }
 
@@ -318,12 +365,12 @@ a {
     font-size: 1.1rem;
     border-radius: var(--radius);
     background-color: var(--color-primary);
-    box-shadow: 0 4px 15px rgba(255, 115, 76, 0.4);
+    box-shadow: 0 4px 15px rgba(147, 68, 26, 0.4);
 }
 
 .auth-btn:hover {
-    background-color: #e6623d;
-    box-shadow: 0 6px 20px rgba(255, 115, 76, 0.6);
+    background-color: #B67332;
+    box-shadow: 0 6px 20px rgba(147, 68, 26, 0.6);
 }
 
 .auth-toggle {
@@ -426,7 +473,7 @@ a {
 
 .tab-btn.active {
     color: var(--color-primary);
-    background: rgba(255, 115, 76, 0.1);
+    background: rgba(147, 68, 26, 0.1);
 }
 
 .tab-content {
@@ -482,8 +529,8 @@ a {
 .status-en_attente,
 .status-partiellement_payee,
 .status-partiel {
-    background: rgba(255, 205, 76, 0.2);
-    color: #e6b800;
+    background: rgba(218, 171, 58, 0.2);
+    color: #B67332;
 }
 
 .status-annulee,
@@ -519,11 +566,6 @@ a {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--spacing-lg);
-}
-
-.rooms-see-all {
-    text-align: center;
-    margin-top: var(--spacing-lg);
 }
 
 .room-card {
@@ -592,7 +634,7 @@ a {
 }
 
 .room-type {
-    color: var(--color-brand-navy);
+    color: var(--color-primary);
     font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -603,14 +645,14 @@ a {
 .room-title {
     font-size: 1.4rem;
     margin-bottom: 10px;
-    color: var(--color-brand-navy);
+    color: var(--color-text);
 }
 
 .room-info {
     display: flex;
     gap: 15px;
     margin-bottom: 15px;
-    color: var(--color-brand-navy);
+    color: #666;
     font-size: 0.9rem;
 }
 
@@ -623,7 +665,7 @@ a {
 .room-price {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--color-brand-navy);
+    color: var(--color-text);
     margin-bottom: 20px;
     margin-top: auto;
 }
@@ -637,6 +679,29 @@ a {
 .btn-book {
     width: 100%;
     text-align: center;
+}
+
+/* Conteneur du bouton "Voir toutes les chambres" */
+.rooms-see-all {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+}
+
+.rooms-see-all .btn {
+    padding: 14px 36px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 16px rgba(147, 68, 26, 0.25);
+    transition: all 0.3s ease;
+}
+
+.rooms-see-all .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(147, 68, 26, 0.4);
 }
 
 .btn-disabled {
@@ -660,7 +725,7 @@ a {
 .spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid rgba(255, 115, 76, 0.2);
+    border: 4px solid rgba(147, 68, 26, 0.2);
     border-top: 4px solid var(--color-primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
@@ -853,8 +918,8 @@ a {
    Pied de page (Footer)
    ========================================= */
 .site-footer {
-    background: var(--color-brand-cream);
-    color: rgba(7, 66, 162, 0.804);
+    background: #1A0F08;
+    color: rgba(255, 255, 255, 0.75);
     margin-top: auto;
 }
 
@@ -870,16 +935,15 @@ a {
 .footer-brand .footer-logo-text {
     font-size: 1.4rem;
     font-weight: 700;
-    color: var(--color-primary);
+    color: #fff;
     display: block;
     margin-bottom: 14px;
-
 }
 
 .footer-brand p {
     font-size: 0.9rem;
     line-height: 1.8;
-    color: rgba(7, 66, 162, 0.804);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .footer-links h4,
@@ -895,7 +959,7 @@ a {
 
 .footer-links a {
     display: block;
-    color: rgba(7, 66, 162, 0.804);
+    color: rgba(255, 255, 255, 0.65);
     font-size: 0.9rem;
     margin-bottom: 10px;
     transition: color 0.2s, padding-left 0.2s;
@@ -909,7 +973,7 @@ a {
 .footer-contact p {
     font-size: 0.9rem;
     margin-bottom: 10px;
-    color: rgba(7, 66, 162, 0.804);
+    color: rgba(255, 255, 255, 0.65);
 }
 
 .social-icons {
@@ -922,14 +986,14 @@ a {
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: rgba(7, 66, 162, 0.685);
-    border: 1px solid rgba(7, 66, 162, 0.804);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--color-brand-navy);
+    color: rgba(255, 255, 255, 0.75);
     transition: background 0.25s, color 0.25s, transform 0.25s;
 }
 
@@ -945,7 +1009,7 @@ a {
     text-align: center;
     padding: 20px;
     font-size: 0.85rem;
-    color: rgba(7, 66, 162, 0.804);
+    color: rgba(255, 255, 255, 0.4);
 }
 
 @media (max-width: 900px) {
@@ -958,6 +1022,39 @@ a {
 @media (max-width: 550px) {
     .footer-inner {
         grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    /* Centrer le texte de la marque */
+    .footer-brand p {
+        margin: 0 auto;
+    }
+
+    /* Centrer les titres de section */
+    .footer-links h4,
+    .footer-contact h4,
+    .footer-socials h4 {
+        text-align: center;
+    }
+
+    /* Centrer les liens */
+    .footer-links a {
+        text-align: center;
+    }
+
+    /* Annuler le décalage au hover sur mobile */
+    .footer-links a:hover {
+        padding-left: 0;
+    }
+
+    /* Centrer les infos de contact */
+    .footer-contact p {
+        text-align: center;
+    }
+
+    /* Centrer les icônes sociales */
+    .social-icons {
+        justify-content: center;
     }
 }
 
@@ -976,7 +1073,7 @@ a {
     border: none;
     font-size: 1.3rem;
     cursor: pointer;
-    box-shadow: 0 4px 18px rgba(255, 115, 76, 0.45);
+    box-shadow: 0 4px 18px rgba(147, 68, 26, 0.45);
     opacity: 0;
     transform: translateY(12px);
     transition: opacity 0.3s, transform 0.3s;
@@ -989,6 +1086,138 @@ a {
 }
 
 .scroll-top-btn:hover {
-    background: #e6623d;
-    box-shadow: 0 6px 24px rgba(255, 115, 76, 0.6);
+    background: #B67332;
+    box-shadow: 0 6px 24px rgba(147, 68, 26, 0.6);
+}
+
+/* =========================================
+   Responsive Design (Tablets & Mobiles)
+   ========================================= */
+
+/* Conteneur pour défilement horizontal des tableaux */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: var(--spacing-md);
+}
+
+@media (max-width: 900px) {
+    /* Tablette */
+
+    /* Hamburger visible, header reste horizontal */
+    .nav-toggle {
+        display: flex;
+    }
+
+    /* Logo plus petit, aligné à gauche */
+    .logo-img {
+        height: 42px;
+    }
+
+    /* Header reste en row */
+    .header {
+        flex-direction: row;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    /* Menu de navigation en drawer vertical */
+    .nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--color-bg);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease, padding 0.35s ease, box-shadow 0.35s ease;
+        box-shadow: none;
+        z-index: 999;
+    }
+
+    .nav.open {
+        max-height: 400px;
+        padding: var(--spacing-sm) 0;
+        box-shadow: 0 8px 20px rgba(43, 27, 18, 0.12);
+    }
+
+    .nav .nav-link,
+    .nav .btn {
+        width: 100%;
+        padding: 14px var(--spacing-md);
+        border-radius: 0;
+        font-size: 1rem;
+        border-bottom: 1px solid rgba(43, 27, 18, 0.05);
+    }
+
+    .nav .btn {
+        margin: var(--spacing-sm) var(--spacing-md);
+        width: calc(100% - 2 * var(--spacing-md));
+        border-radius: var(--radius);
+        text-align: center;
+        border-bottom: none;
+    }
+
+    .rooms-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+    .tabs {
+        flex-wrap: wrap;
+    }
+    .data-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 600px) {
+    /* Mobile */
+    .hero-carousel {
+        height: 400px;
+    }
+    .placeholder-slide {
+        padding: 20px;
+    }
+    .placeholder-slide h1 {
+        font-size: 1.8rem;
+    }
+    .placeholder-slide p {
+        font-size: 1rem;
+    }
+    .auth-container {
+        padding: var(--spacing-md);
+    }
+    .glassmorphism {
+        padding: 25px;
+        width: 100%;
+        max-width: 100%;
+    }
+    .page-header h1 {
+        font-size: 2rem;
+    }
+    .rooms-grid {
+        grid-template-columns: 1fr;
+    }
+    .room-image-container {
+        height: 180px;
+    }
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+    .kpi-card {
+        padding: 15px;
+    }
+    .chart-card {
+        padding: 15px;
+    }
 }

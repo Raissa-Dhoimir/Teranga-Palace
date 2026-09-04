@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Teranga Palace</title>
+    <title>Connexion / Inscription - Teranga Palace</title>
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
     <!-- Page transition -->
@@ -26,125 +26,102 @@
             color: var(--color-primary);
         }
     </style>
-    <!-- Supabase JS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
-<body>
+<body class="auth-body">
 
-    <header class="header">
+    <!-- Header de navigation -->
+    <header class="header"
+        style="position:relative;z-index:10;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.2);">
         <div class="logo">
-            <img src="assetes/logo.jfif" alt="Teranga Palace" class="logo-img">
+            <a href="index.html" onclick="navigateTo(event,'index.html')"
+                style="color:#fff;font-weight:700;font-size:1.1rem;">
+                <img src="assetes/logo_teranga_palace.png" alt="Teranga Palace" class="logo-img">
+            </a>
         </div>
         <nav class="nav">
-            <a href="index.html" class="nav-link active" id="nav-accueil">Accueil</a>
-            <a href="chambres.html" class="nav-link" id="nav-chambres"
-                onclick="navigateTo(event, 'chambres.html')">Chambres</a>
-            <a href="dashboard-client.html" id="dashboard-btn-nav" class="nav-link hidden">Mon Espace</a>
-            <a href="auth.html" id="auth-btn-nav" class="btn btn-primary"
-                onclick="navigateTo(event, 'auth.html')">Connexion / Inscription</a>
-            <a href="#" id="logout-btn-nav" class="btn btn-primary hidden" onclick="handleLogout(event)">Déconnexion</a>
+            <a href="index.html" class="nav-link" style="color:rgba(255,255,255,0.85);"
+                onclick="navigateTo(event,'index.html')">Accueil</a>
+            <a href="chambres.html" class="nav-link" style="color:rgba(255,255,255,0.85);"
+                onclick="navigateTo(event,'chambres.html')">Chambres</a>
+            <span class="btn btn-primary" style="opacity:0.7;cursor:default;">Connexion / Inscription</span>
         </nav>
     </header>
-
-    <main class="main-content">
-        <!-- Carrousel avec défilement des images (Lot 4) -->
-        <section class="hero-carousel">
-            <div class="carousel-track">
-                <img src="assetes/pexels-chrislyn-dsouza-424969149-34496708.jpg" alt="Hôtel Teranga 1">
-                <img src="assetes/pexels-elina-sazonova-1838554.jpg" alt="Hôtel Teranga 2">
-                <img src="assetes/pexels-erik-karits-2093459-10923534.jpg" alt="Hôtel Teranga 3">
-                <img src="assetes/pexels-santiagob-13477020.jpg" alt="Hôtel Teranga 4">
-                <img src="assetes/pexels-thesovereignwolf-32978227.jpg" alt="Hôtel Teranga 5">
-                <!-- Répétition de la première image pour la boucle -->
-                <img src="assetes/pexels-chrislyn-dsouza-424969149-34496708.jpg" alt="Hôtel Teranga 1">
+    <div class="auth-container">
+        <!-- Glassmorphism Card -->
+        <div class="auth-card glassmorphism">
+            <div class="auth-header">
+                <h2>Teranga Palace</h2>
+                <p id="auth-subtitle">Connectez-vous à votre compte</p>
             </div>
-            <div class="carousel-overlay"></div>
 
-            <div class="carousel-content">
-                <div class="carousel-slide placeholder-slide">
-                    <h1>Bienvenue à l'Hôtel Teranga Palace</h1>
-                    <p>Découvrez le luxe et la sérénité au cœur de Dakar.</p>
-                    <a href="chambres.html" class="btn btn-primary">Réserver maintenant</a>
+            <div id="alert-container" class="alert hidden"></div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required placeholder="votre@email.com">
                 </div>
-            </div>
-        </section>
-
-        <section class="rooms-container">
-            <div id="rooms-grid" class="rooms-grid">
-                <!-- Les chambres seront injectées ici par JS -->
-                <div class="loader-container">
-                    <div class="spinner"></div>
-                    <p>Chargement des chambres...</p>
+                <div class="form-group">
+                    <label for="login-password">Mot de passe</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
                 </div>
-            </div>
-            <div class="rooms-see-all">
-                <a href="chambres.html" class="btn btn-primary" onclick="navigateTo(event, 'chambres.html')">Voir toutes
-                    les chambres</a>
-            </div>
-        </section>
-    </main>
-
-    <!-- Pied de page -->
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <span class="footer-logo-text"> Teranga Palace</span>
-                <p>Le luxe au cœur de Dakar.<br>Une expérience inoubliable vous attend.</p>
-            </div>
-            <div class="footer-links">
-                <h4>Navigation</h4>
-                <a href="index.html">Accueil</a>
-                <a href="chambres.html">Nos Chambres</a>
-                <a href="auth.html">Connexion / Inscription</a>
-            </div>
-            <div class="footer-contact">
-                <h4>Contact</h4>
-                <p>📍 Avenue Léopold Sédar Senghor, Dakar</p>
-                <p>📞 +221 33 800 00 00</p>
-                <p>✉️ contact@terangapalace.sn</p>
-            </div>
-            <div class="footer-socials">
-                <h4>Suivez-nous</h4>
-                <div class="social-icons">
-                    <a href="#" class="social-icon" aria-label="Facebook">f</a>
-                    <a href="#" class="social-icon" aria-label="Instagram">in</a>
-                    <a href="#" class="social-icon" aria-label="Twitter">𝕏</a>
+                <button type="submit" class="btn btn-primary auth-btn">Se connecter</button>
+                <p class="auth-toggle">Pas de compte ? <a href="#" onclick="toggleAuthMode(event)">S'inscrire</a></p>
+                <div class="auth-home-link">
+                    <a href="index.html">← Retour à l'accueil</a>
                 </div>
-            </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form hidden-form">
+                <div class="form-group">
+                    <label for="reg-nom">Nom</label>
+                    <input type="text" id="reg-nom" required placeholder="Votre nom">
+                </div>
+                <div class="form-group">
+                    <label for="reg-prenom">Prénom</label>
+                    <input type="text" id="reg-prenom" required placeholder="Votre prénom">
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" required placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Mot de passe</label>
+                    <input type="password" id="reg-password" required placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label for="reg-role">Rôle (Démo)</label>
+                    <select id="reg-role">
+                        <option value="client">Client</option>
+                        <option value="admin">Administrateur</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary auth-btn">Créer un compte</button>
+                <p class="auth-toggle">Déjà un compte ? <a href="#" onclick="toggleAuthMode(event)">Se connecter</a></p>
+                <div class="auth-home-link">
+                    <a href="index.html">← Retour à l'accueil</a>
+                </div>
+            </form>
         </div>
-        <div class="footer-bottom">
-            <p>© 2026 Teranga Palace. Tous droits réservés.</p>
-        </div>
-    </footer>
+    </div>
 
-    <!-- Bouton scroll to top -->
-    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-        aria-label="Retour en haut">↑</button>
-
-    <!-- Scripts -->
+    <!-- Configuration Supabase -->
     <script src="js/supabase-config.js"></script>
-    <script src="js/apercu-chambres.js"></script>
+    <!-- Logique d'authentification -->
     <script src="js/auth.js"></script>
     <script>
-        // Fade-in au chargement
         document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('loaded');
         });
-
-        // Transition de page douce
         function navigateTo(e, url) {
             e.preventDefault();
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.35s ease';
             setTimeout(() => { window.location.href = url; }, 350);
         }
-
-        // Bouton scroll-to-top
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('scrollTopBtn');
-            if (btn) btn.classList.toggle('visible', window.scrollY > 300);
-        });
     </script>
 </body>
 
